@@ -1,0 +1,15 @@
+grumphp:
+    ascii:
+        failed: ~
+        succeeded: ~
+    environment:
+        variables:
+            PHP_CS_FIXER_IGNORE_ENV: '1'
+    tasks:
+        composer_normalize:
+            indent_size: 4
+            indent_style: 'space'
+            no_update_lock: true
+            verbose: false
+        composer_script:
+            script: lint
