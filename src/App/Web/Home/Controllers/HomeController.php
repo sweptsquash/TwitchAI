@@ -18,7 +18,7 @@ class HomeController extends Controller
         $streamSuggestions = StreamSuggestion::orderByDesc('created_at')->get();
 
         return inertia('Index', [
-            'intitialConfiguration' => Config::where('key', 'channel_name')->whereNull('value')->exists(),
+            'intitialConfiguration' => Config::where('key', 'channel_name')->doesntExist() || Config::where('key', 'channel_name')->whereNull('value')->exists(),
             'streamSuggestions' => StreamSuggestionResource::collection($streamSuggestions),
         ]);
     }

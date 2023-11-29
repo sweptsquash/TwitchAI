@@ -9,8 +9,7 @@ class UpdateConfigurationAction
 {
     public function execute(UpdateConfigurationRequest $request): void
     {
-        Config::firstWhere(['key' => 'channel_name'])->update(['value' => $request->input('channelName')]);
-
-        Config::firstWhere(['key' => 'openai_key'])->update(['value' => $request->input('openAiKey')]);
+        Config::updateOrCreate(['key' => 'channel_name'], ['value' => $request->input('channelName')]);
+        Config::updateOrCreate(['key' => 'openai_key'], ['value' => $request->input('openAiKey')]);
     }
 }
