@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Web\Home\Resources;
+namespace App\Web\StreamSuggestions\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;

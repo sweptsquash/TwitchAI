@@ -105,28 +105,33 @@
         <!-- Configuration Modal -->
         <ModalForm
             :is-open="isConfigurationOpen"
-            title="Initial setup"
-            submit-text="Save settings"
+            title="Initial configuration"
+            submit-text="Save configuration"
             :has-cancel-button="false"
             :is-processing="configForm.processing"
-            :submit-disabled="configForm.channelName === null"
+            :submit-disabled="configForm.openAiKey === null"
             @submit="submitConfig"
             @close="closeConfig"
         >
             <div class="flex flex-col space-y-4">
                 <TextInput
-                    id="channelName"
-                    v-model="configForm.channelName"
-                    label="Username"
+                    id="twitchUsername"
+                    v-model="configForm.twitchUsername"
                     required
+                    label="Twitch Username"
                 />
 
                 <TextInput
                     id="openAiKey"
                     v-model="configForm.openAiKey"
-                    readonly
-                    disabled
+                    required
                     label="OpenAI API Key"
+                />
+
+                <TextInput
+                    id="openAiOrg"
+                    v-model="configForm.openAiOrg"
+                    label="OpenAI Organisation ID"
                 />
             </div>
         </ModalForm>
@@ -147,14 +152,15 @@ const isConfigurationOpen = ref(false)
 const languages = computed(() => usePage().props.languages)
 
 const configForm = useForm({
-    channelName: null,
+    twitchUsername: null,
     openAiKey: null,
+    openAiOrg: null,
 })
 
 const form = useForm({
     category: null,
     activity: null,
-    language: 'English',
+    language: 'English (British)',
 })
 
 const retryForm = useForm({})

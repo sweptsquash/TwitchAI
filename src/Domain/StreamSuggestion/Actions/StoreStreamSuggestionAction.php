@@ -2,7 +2,7 @@
 
 namespace Domain\StreamSuggestion\Actions;
 
-use App\Web\Home\Requests\StoreStreamSuggestionRequest;
+use App\Web\StreamSuggestions\Requests\StoreStreamSuggestionRequest;
 use Domain\StreamSuggestion\Jobs\ProcessStreamSuggestionJob;
 use Domain\StreamSuggestion\Models\StreamSuggestion;
 use GuzzleHttp\Exception\ConnectException;

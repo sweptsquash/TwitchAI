@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Web\Home\Controllers;
+namespace App\Web\StreamSuggestions\Controllers;
 
 use Domain\StreamSuggestion\Jobs\ProcessStreamSuggestionJob;
 use Domain\StreamSuggestion\Models\StreamSuggestion;
@@ -10,7 +10,7 @@ use OpenAI\Exceptions\TransporterException;
 use OpenAI\Exceptions\UnserializableResponse;
 use Support\Controllers\Controller;
 
-class RetryStreamSuggestion extends Controller
+class RetryStreamSuggestionController extends Controller
 {
     public function __invoke(StreamSuggestion $streamSuggestion)
     {

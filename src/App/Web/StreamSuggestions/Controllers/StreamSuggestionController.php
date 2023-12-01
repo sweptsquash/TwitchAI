@@ -1,24 +1,32 @@
 <?php
 
-namespace App\Web\Home\Controllers;
+namespace App\Web\StreamSuggestions\Controllers;
 
-use App\Web\Home\Requests\StoreStreamSuggestionRequest;
-use App\Web\Home\Requests\UpdateConfigurationRequest;
-use App\Web\Home\Resources\StreamSuggestionResource;
+use App\Web\StreamSuggestions\Requests\StoreStreamSuggestionRequest;
+use App\Web\StreamSuggestions\Requests\UpdateConfigurationRequest;
+use App\Web\StreamSuggestions\Resources\StreamSuggestionResource;
 use Domain\Config\Actions\UpdateConfigurationAction;
 use Domain\Config\Models\Config;
 use Domain\StreamSuggestion\Actions\StoreStreamSuggestionAction;
 use Domain\StreamSuggestion\Models\StreamSuggestion;
 use Support\Controllers\Controller;
 
-class HomeController extends Controller
+class StreamSuggestionController extends Controller
 {
     public function index()
     {
+        $configKeys = collect(['twitch_name', 'open_ai_key', 'open_ai_org']);
+
+        $initialSetup = Config::whereIn('key', $configKeys->toArray())->doesntExist();
+
+        if ($initialSetup) {
+            $configKeys->each(fn ($key) => Config::create(['key' => $key]));
+        }
+
         $streamSuggestions = StreamSuggestion::orderByDesc('created_at')->get();
 
         return inertia('Index', [
-            'intitialConfiguration' => Config::where('key', 'channel_name')->doesntExist() || Config::where('key', 'channel_name')->whereNull('value')->exists(),
+            'intitialConfiguration' => $initialSetup || Config::where('key', 'open_ai_key')->whereNull('value')->exists(),
             'streamSuggestions' => StreamSuggestionResource::collection($streamSuggestions),
         ]);
     }

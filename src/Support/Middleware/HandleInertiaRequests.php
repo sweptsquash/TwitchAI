@@ -50,8 +50,12 @@ class HandleInertiaRequests extends Middleware
     {
         return [
             [
-                'label' => 'English',
-                'value' => 'English',
+                'label' => 'English (American)',
+                'value' => 'English (American)',
+            ],
+            [
+                'label' => 'English (British)',
+                'value' => 'English (British)',
             ],
             [
                 'label' => 'Català',

@@ -51,6 +51,8 @@ return [
         'NATIVEPHP_APPLE_ID',
         'NATIVEPHP_APPLE_ID_PASS',
         'NATIVEPHP_APPLE_TEAM_ID',
+        'OPEN_AI_*',
+        'TWITCH_*',
     ],
 
     /**

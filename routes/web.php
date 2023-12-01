@@ -1,7 +1,7 @@
 <?php
 
-use App\Web\Home\Controllers\HomeController;
-use App\Web\Home\Controllers\RetryStreamSuggestion;
+use App\Web\StreamSuggestions\Controllers\RetryStreamSuggestionController;
+use App\Web\StreamSuggestions\Controllers\StreamSuggestionController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,8 +15,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('', [HomeController::class, 'index'])->name('home');
-Route::post('', [HomeController::class, 'store'])->name('store');
-Route::put('', [HomeController::class, 'update'])->name('update');
-Route::put('retry/{streamSuggestion}', RetryStreamSuggestion::class)->name('retry');
-Route::get('{streamSuggestion}', [HomeController::class, 'show'])->name('show');
+Route::controller(StreamSuggestionController::class)->group(function () {
+    Route::get('', 'index')->name('home');
+    Route::post('', 'store')->name('store');
+    Route::put('', 'update')->name('update');
+    Route::get('{streamSuggestion}', 'show')->name('show');
+    Route::put('{streamSuggestion}/retry', RetryStreamSuggestionController::class)->name('retry');
+});

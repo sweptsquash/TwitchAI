@@ -19,6 +19,11 @@ body,
     @apply h-full min-h-full;
 }
 
+.required::after {
+    content: '*';
+    @apply text-red-500;
+}
+
 .link {
     @apply text-indigo-600 underline hover:text-indigo-800;
 }

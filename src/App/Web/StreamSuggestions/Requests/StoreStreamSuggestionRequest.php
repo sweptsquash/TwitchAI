@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Web\Home\Requests;
+namespace App\Web\StreamSuggestions\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
