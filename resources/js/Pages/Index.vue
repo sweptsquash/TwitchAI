@@ -79,7 +79,9 @@
                     id="category"
                     v-model="form.category"
                     label="Category"
+                    required
                     placeholder="Example: Starfield"
+                    :error="form.errors?.category"
                 />
 
                 <TextInput
@@ -87,6 +89,8 @@
                     v-model="form.activity"
                     label="Activity"
                     placeholder="Example: Taking over the galaxy one system at a time"
+                    required
+                    :error="form.errors?.activity"
                 />
 
                 <SelectInput
@@ -119,6 +123,7 @@
                     v-model="configForm.twitchUsername"
                     required
                     label="Twitch Username"
+                    :error="configForm.errors?.twitchUsername"
                 />
 
                 <TextInput
@@ -126,12 +131,14 @@
                     v-model="configForm.openAiKey"
                     required
                     label="OpenAI API Key"
+                    :error="configForm.errors?.openAiKey"
                 />
 
                 <TextInput
                     id="openAiOrg"
                     v-model="configForm.openAiOrg"
                     label="OpenAI Organisation ID"
+                    :error="configForm.errors?.openAiOrg"
                 />
             </div>
         </ModalForm>

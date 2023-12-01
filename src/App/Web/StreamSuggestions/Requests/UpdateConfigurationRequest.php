@@ -11,7 +11,7 @@ class UpdateConfigurationRequest extends FormRequest
         return [
             'twitchUsername' => ['required', 'string'],
             'openAiKey' => ['required', 'string'],
-            'openAiOrg' => ['required', 'string'],
+            'openAiOrg' => ['nullable', 'string'],
         ];
     }
 }
