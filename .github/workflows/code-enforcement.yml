@@ -1,0 +1,74 @@
+name: Tests
+
+on:
+  push
+
+jobs:
+  enforce:
+      runs-on: ubuntu-22.04
+      env:
+        APP_NAME: SenAIAssistant
+        APP_ENV: testing
+        APP_DEBUG: true
+        APP_URL: http://localhost:8100
+        LOG_CHANNEL: stack
+        LOG_LEVEL: debug
+        DB_CONNECTION: sqlite
+        DB_DATABASE: database/database.sqlite
+        DB_FOREIGN_KEYS: true
+        BROADCAST_DRIVER: log
+        CACHE_DRIVER: file
+        FILESYSTEM_DISK: local
+        QUEUE_CONNECTION: sync
+        SESSION_DRIVER: file
+        SESSION_LIFETIME: 120
+
+      strategy:
+        fail-fast: true
+        matrix:
+          php: ['8.2']
+
+      name: PHP ${{ matrix.php }}
+
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v4
+
+        - name: Setup PHP
+          uses: shivammathur/setup-php@v2
+          with:
+            php-version: ${{ matrix.php }}
+            extensions: dom, curl, libxml, bcmath, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, gd, igbinary, msgpack, lzf, zstd, lz4, memcached, gmp
+            ini-values: log_errors=On, error_reporting=E_ALL, error_log=~/phpunit/php_errors.log, date.timezone=UTC, memory_limit=-1, max_execution_time=-1, display_errors=On, display_startup_errors=On
+            tools: composer:v2
+            coverage: pcov
+
+        - name: Setup Node.js
+          uses: actions/setup-node@v3
+          with:
+            node-version: 18
+            cache: 'npm'
+
+        - name: Get composer cache directory
+          id: composer-cache
+          run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+        - name: Cache dependencies
+          uses: actions/cache@v3
+          with:
+            path: ${{ steps.composer-cache.outputs.dir }}
+            key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+            restore-keys: ${{ runner.os }}-composer-
+
+        - name: Install Composer dependencies
+          run: composer install --no-progress --no-scripts -n -o
+
+        - name: Enforce PHP Coding Standards
+          run: composer run test:lint
+
+        - name: Run linters
+          uses: wearerequired/lint-action@v2
+          with:
+            auto_fix: true
+            eslint: true
+            eslint_args: "\"resources/js/**/*.{js,ts,vue}\" ."

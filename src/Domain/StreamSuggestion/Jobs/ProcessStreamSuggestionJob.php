@@ -30,8 +30,8 @@ class ProcessStreamSuggestionJob implements ShouldQueue
     public function handle()
     {
         $this->client = OAI::factory()
-            ->withApiKey(config('services.openai.key'))
-            ->withOrganization(config('services.openai.org'))
+            ->withApiKey(Config::firstWhere('key', 'open_ai_key')->value)
+            ->withOrganization(Config::firstWhere('key', 'open_ai_org')->value)
             ->withHttpClient(new GuzzleClient(['timeout' => $this->timeout]))
             ->make();
 
@@ -62,7 +62,7 @@ class ProcessStreamSuggestionJob implements ShouldQueue
                 [
                     'role' => 'system',
                     'content' => view('templates.open-ai.prompts.stream-suggestion', [
-                        'channelName' => Config::firstWhere('key', 'channel_name')->value,
+                        'channelName' => Config::firstWhere('key', 'twitch_name')->value,
                         'activity' => $this->streamSuggestion->activity,
                         'category' => $this->streamSuggestion->category,
                         'language' => $this->streamSuggestion->language,

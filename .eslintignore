@@ -3,6 +3,7 @@
 bootstrap/
 config/
 database/
+dist/
 lang/
 node_modules/
 public/

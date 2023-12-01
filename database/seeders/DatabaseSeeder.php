@@ -12,7 +12,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        Config::create(['key' => 'openai_key']);
-        Config::create(['key' => 'channel_name']);
+        Config::create(['key' => 'open_ai_key']);
+        Config::create(['key' => 'open_ai_org']);
+        Config::create(['key' => 'twitch_name']);
     }
 }
