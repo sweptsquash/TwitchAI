@@ -7,11 +7,13 @@ jobs:
   enforce:
       runs-on: ubuntu-22.04
       env:
-        APP_NAME: SenAIAssistant
-        APP_ENV: testing
-        APP_DEBUG: true
-        APP_URL: http://localhost:8100
+        APP_NAME: "Sen AI Assistant"
+        APP_KEY: ${{ secrets.APP_KEY }}
+        APP_ENV: prod
+        APP_DEBUG: false
+        APP_URL: http://127.0.0.1:8100
         LOG_CHANNEL: stack
+        LOG_DEPRECATIONS_CHANNEL: null
         LOG_LEVEL: debug
         DB_CONNECTION: sqlite
         DB_DATABASE: database/database.sqlite
@@ -22,6 +24,15 @@ jobs:
         QUEUE_CONNECTION: sync
         SESSION_DRIVER: file
         SESSION_LIFETIME: 120
+        MEMCACHED_HOST: 127.0.0.1
+        REDIS_HOST: 127.0.0.1
+        REDIS_PASSWORD: null
+        REDIS_PORT: 6379
+        VITE_APP_NAME: "Sen AI Assistant"
+        NATIVEPHP_APP_AUTHOR: "Stewart Marsh"
+        NATIVEPHP_UPDATER_ENABLED: false
+        NATIVEPHP_APP_ID: "com.senshudo.senai"
+        NATIVEPHP_DATABASE_PATH: "database/nativephp.sqlite"
 
       strategy:
         fail-fast: true

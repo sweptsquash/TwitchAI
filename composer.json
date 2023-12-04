@@ -13,7 +13,7 @@
         "based/momentum-trail": "^0.2.2",
         "betterapp/laravel-db-encrypter": "dev-master",
         "doctrine/dbal": "^3.7.2",
-        "guzzlehttp/guzzle": "^7.8",
+        "guzzlehttp/guzzle": "^7.8.1",
         "inertiajs/inertia-laravel": "^0.6.11",
         "laravel/framework": "^10.34.2",
         "laravel/sanctum": "^3.3.2",
