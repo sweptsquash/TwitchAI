@@ -58,7 +58,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: 8.2
-          extensions: dom, curl, libxml, bcmath, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, gd, igbinary, msgpack, lzf, zstd, lz4, memcached, gmp
+          extensions: dom, curl, libxml, bcmath, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, gd, igbinary, msgpack, lzf, zstd, lz4, memcached, gmp, fileinfo
           ini-values: log_errors=On, error_reporting=E_ALL, error_log=~/phpunit/php_errors.log, date.timezone=UTC, memory_limit=-1, max_execution_time=-1, display_errors=On, display_startup_errors=On
           tools: composer:v2
           coverage: pcov
@@ -101,7 +101,7 @@ jobs:
         uses: pietrobolcato/action-read-yaml@1.0.0
         id: read_action_js
         with:
-          config: ${{ github.workspace }}/dist/latest.yml
+          config: dist/latest.yml
 
       - name: use-yaml-file-non-windows
         if: matrix.os != 'windows-latest'
