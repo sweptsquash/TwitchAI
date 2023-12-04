@@ -92,11 +92,6 @@ jobs:
         run: npm run build:prod
 
       - name: Build Application
-        if: matrix.os != 'windows-latest'
-        run: php artisan native:build ${{ matrix.name }}
-
-      - name: Build Windows Application
-        if: matrix.os == 'windows-latest'
         run: php artisan native:build ${{ matrix.name }} --no-interaction
 
       - name: Check file exists
