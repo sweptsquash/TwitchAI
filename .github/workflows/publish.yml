@@ -86,7 +86,7 @@ jobs:
       - name: Install Composer dependencies
         run: |
           composer install --no-dev --no-progress --no-scripts -n -o
-          php artisan native:install
+          php artisan native:install --no-interaction
 
       - name: Build Prod Frontend
         run: npm run build:prod
