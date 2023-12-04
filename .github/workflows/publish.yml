@@ -43,9 +43,9 @@ jobs:
           - os: ubuntu-latest
             name: linux
             ext: deb
-          - os: windows-latest
-            name: win
-            ext: exe
+          #- os: windows-latest
+          #  name: win
+          #  ext: exe
           #- os: macos-latest
           #  name: mac
           #  ext: dmg
@@ -84,20 +84,33 @@ jobs:
           restore-keys: ${{ runner.os }}-composer-
 
       - name: Install Composer dependencies
-        run: composer install --no-dev --no-progress --no-scripts -n -o
+        run: |
+          composer install --no-dev --no-progress --no-scripts -n -o
+          php artisan native:install
 
       - name: Build Prod Frontend
         run: npm run build:prod
 
       - name: Build Application
         if: matrix.os != 'windows-latest'
-        run: php artisan native:build ${{ matrix.name }} --no-interaction
+        run: php artisan native:build ${{ matrix.name }}
 
       - name: Build Windows Application
         if: matrix.os == 'windows-latest'
         run: php artisan native:build ${{ matrix.name }} --no-interaction
 
+      - name: Check file exists
+        shell: bash
+        run: |
+            FILE=${{ github.workspace }}/dist/latest.yml
+            if [ -f "$FILE" ]; then
+                exit 0
+            else
+                exit 1
+            fi
+
       - name: read-yaml-file
+        if: ${{ success() }}
         uses: pietrobolcato/action-read-yaml@1.0.0
         id: read_action_js
         with:
