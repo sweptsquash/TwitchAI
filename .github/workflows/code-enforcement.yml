@@ -1,6 +1,9 @@
 name: Code enforcement
 
-on: ['push']
+on:
+  push:
+    tags-ignore:
+      - '**'
 
 jobs:
   enforce:
