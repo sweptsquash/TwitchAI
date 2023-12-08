@@ -97,12 +97,6 @@ jobs:
       - name: Build Application
         run: php artisan native:build ${{ matrix.name }} --no-interaction
 
-      - name: Check file exists linux
-        if: matrix.os == 'ubuntu-latest'
-        shell: bash
-        run: |
-            test ! -f ${{ github.workspace }}/dist/${{ matrix.latest }}.yml && exit 1
-
       - name: read-yaml-file
         if: ${{ success() && matrix.os == 'ubuntu-latest' }}
         uses: pietrobolcato/action-read-yaml@1.0.0
