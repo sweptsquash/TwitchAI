@@ -61,12 +61,13 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install Prerequisites
+        if: matrix.name == 'win'
         run: |
           sudo dpkg --add-architecture i386
           sudo mkdir -pm755 /etc/apt/keyrings
           sudo wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key
           sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/focal/winehq-focal.sources
-          sudo apt-get update && sudo apt-get install -y gcc-multilib g++-multilib winehq-stable
+          sudo apt-get update && sudo apt-get install --install-recommends -y gcc-multilib g++-multilib winehq-stable
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
