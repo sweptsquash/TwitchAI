@@ -97,12 +97,8 @@ jobs:
       - name: Check file exists
         shell: bash
         run: |
-            FILE=${{ github.workspace }}/dist/latest.yml
-            if [ -f "$FILE" ]; then
-                exit 0
-            else
-                exit 1
-            fi
+            sleep 2
+            test ! -f ${{ github.workspace }}/dist/latest.yml && exit 1
 
       - name: read-yaml-file
         if: ${{ success() }}
