@@ -42,12 +42,15 @@ jobs:
         include:
           - os: ubuntu-latest
             name: linux
+            latest: latest-linux
             ext: deb
           #- os: windows-latest
           #  name: win
+          #  latest: latest
           #  ext: exe
           #- os: macos-latest
           #  name: mac
+          #  latest: latest-mac
           #  ext: dmg
 
     steps:
@@ -94,18 +97,18 @@ jobs:
       - name: Build Application
         run: php artisan native:build ${{ matrix.name }} --no-interaction
 
-      - name: Check file exists
+      - name: Check file exists linux
+        if: matrix.os == 'ubuntu-latest'
         shell: bash
         run: |
-            sleep 2
-            test ! -f ${{ github.workspace }}/dist/latest.yml && exit 1
+            test ! -f ${{ github.workspace }}/dist/${{ matrix.latest }}.yml && exit 1
 
       - name: read-yaml-file
-        if: ${{ success() }}
+        if: ${{ success() && matrix.os == 'ubuntu-latest' }}
         uses: pietrobolcato/action-read-yaml@1.0.0
         id: read_action_js
         with:
-          config: dist/latest.yml
+          config: dist/${{ matrix.latest }}.yml
 
       - name: use-yaml-file-non-windows
         if: matrix.os != 'windows-latest'
