@@ -54,11 +54,7 @@ export default ({ mode }) => {
                 ],
             }),
             laravel({
-                input: [
-                    'resources/css/app.css',
-                    'resources/js/app.ts',
-                    'resources/js/Pages/Error.vue',
-                ],
+                input: ['resources/css/app.css', 'resources/js/app.ts'],
                 refresh: ['routes/**', 'resources/css/**', 'resources/js/**'],
                 valetTls: process.env.VITE_VALET_TLS ? 'twitchai.test' : undefined,
             }),

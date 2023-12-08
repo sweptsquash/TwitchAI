@@ -10,6 +10,23 @@ on:
 
 jobs:
   build:
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            name: linux
+            latest: latest-linux
+            ext: deb
+          - os: windows-latest
+            name: win
+            latest: latest
+            ext: exe
+          #- os: macos-latest
+          #  name: mac
+          #  latest: latest-mac
+          #  ext: dmg
+
+
     name: Build Binaries for ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     env:
@@ -40,34 +57,9 @@ jobs:
       NATIVEPHP_APP_ID: "com.senshudo.senai"
       NATIVEPHP_DATABASE_PATH: "database/nativephp.sqlite"
 
-    strategy:
-      matrix:
-        include:
-          - os: ubuntu-latest
-            name: linux
-            latest: latest-linux
-            ext: deb
-          - os: ubuntu-latest
-            name: win
-            latest: latest
-            ext: exe
-          #- os: macos-latest
-          #  name: mac
-          #  latest: latest-mac
-          #  ext: dmg
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Install Prerequisites
-        if: matrix.name == 'win'
-        run: |
-          sudo dpkg --add-architecture i386
-          sudo mkdir -pm755 /etc/apt/keyrings
-          sudo wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key
-          sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/focal/winehq-focal.sources
-          sudo apt-get update && sudo apt-get install --install-recommends -y gcc-multilib g++-multilib winehq-stable
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -110,20 +102,20 @@ jobs:
         run: php artisan native:build ${{ matrix.name }} --no-interaction
 
       - name: Run YAML to Github Output Action
-        if: ${{ success() && matrix.os == 'ubuntu-latest' }}
+        if: ${{ success() }}
         uses: christian-ci/action-yaml-github-output@v2
         id: yaml-output
         with:
           file_path: dist/${{ matrix.latest }}.yml
 
       - name: Linux/MacOS Use YAML
-        if: matrix.name == 'linux' || matrix.name == 'mac'
+        if: matrix.os != 'windows-latest'
         run: |
           echo "SEN_VERSION=${{ steps.yaml-output.outputs.version }}" >> $GITHUB_ENV
           echo "SEN_PATH=${{ steps.yaml-output.outputs.path }}" >> $GITHUB_ENV
 
       - name: Windows Use YAML
-        if: matrix.name == 'win'
+        if: matrix.os == 'windows-latest'
         run: |
           echo "SEN_VERSION=${{ steps.yaml-output.outputs.version }}" >> $env:$GITHUB_ENV
           echo "SEN_PATH=${{ steps.yaml-output.outputs.path }}" >> $env:$GITHUB_ENV
