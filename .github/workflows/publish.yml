@@ -11,20 +11,24 @@ on:
 jobs:
   build:
     strategy:
+      fail-fast: true
       matrix:
         include:
           - os: ubuntu-latest
             name: linux
             latest: latest-linux
             ext: deb
+            php-extensions: dom, curl, libxml, bcmath, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, gd, igbinary, msgpack, lzf, zstd, lz4, memcached, gmp, fileinfo
           - os: windows-latest
             name: win
             latest: latest
             ext: exe
+            php-extensions: dom, curl, libxml, bcmath, mbstring, zip, pdo, sqlite, pdo_sqlite, gd, gmp, fileinfo
           #- os: macos-latest
           #  name: mac
           #  latest: latest-mac
           #  ext: dmg
+          #  php-extensions: dom, curl, libxml, bcmath, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, gd, igbinary, msgpack, lzf, zstd, lz4, memcached, gmp, fileinfo
 
 
     name: Build Binaries for ${{ matrix.os }}
@@ -65,7 +69,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: 8.2
-          extensions: dom, curl, libxml, bcmath, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, gd, igbinary, msgpack, lzf, zstd, lz4, memcached, gmp, fileinfo
+          extensions: ${{ matrix.php-extensions }}
           ini-values: log_errors=On, error_reporting=E_ALL, error_log=~/phpunit/php_errors.log, date.timezone=UTC, memory_limit=-1, max_execution_time=-1, display_errors=On, display_startup_errors=On
           tools: composer:v2
           coverage: pcov
@@ -80,13 +84,28 @@ jobs:
         run: npm ci
 
       - name: Get composer cache directory
+        if: matrix.os != 'windows-latest'
         id: composer-cache
         run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
-      - name: Cache dependencies
+      - name: Get composer cache directory
+        if: matrix.os == 'windows-latest'
+        id: composer-cache-windows
+        run: echo "dir=$(composer config cache-files-dir)" >> $env:$GITHUB_OUTPUT
+
+      - name: Cache composer dependencies
+        if: matrix.os != 'windows-latest'
         uses: actions/cache@v3
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Cache composer dependencies
+        if: matrix.os == 'windows-latest'
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.composer-cache-windows.outputs.dir }}
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: ${{ runner.os }}-composer-
 
