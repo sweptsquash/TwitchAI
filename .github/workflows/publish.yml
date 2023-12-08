@@ -47,14 +47,14 @@ jobs:
             name: linux
             latest: latest-linux
             ext: deb
-          #- os: windows-latest
-          #  name: win
-          #  latest: latest
-          #  ext: exe
-          #- os: macos-latest
-          #  name: mac
-          #  latest: latest-mac
-          #  ext: dmg
+          - os: windows-latest
+            name: win
+            latest: latest
+            ext: exe
+          - os: macos-latest
+            name: mac
+            latest: latest-mac
+            ext: dmg
 
     steps:
       - name: Checkout
