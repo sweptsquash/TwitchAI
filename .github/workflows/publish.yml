@@ -47,18 +47,26 @@ jobs:
             name: linux
             latest: latest-linux
             ext: deb
-          - os: windows-latest
+          - os: ubuntu-latest
             name: win
             latest: latest
             ext: exe
-          - os: macos-latest
-            name: mac
-            latest: latest-mac
-            ext: dmg
+          #- os: macos-latest
+          #  name: mac
+          #  latest: latest-mac
+          #  ext: dmg
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Install Prerequisites
+        run: |
+          sudo dpkg --add-architecture i386
+          sudo mkdir -pm755 /etc/apt/keyrings
+          sudo wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key
+          sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/focal/winehq-focal.sources
+          sudo apt-get update && sudo apt-get install -y gcc-multilib g++-multilib winehq-stable
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -107,14 +115,14 @@ jobs:
         with:
           file_path: dist/${{ matrix.latest }}.yml
 
-      - name: use-yaml-file-non-windows
-        if: matrix.os != 'windows-latest'
+      - name: Linux/MacOS Use YAML
+        if: matrix.name == 'linux' || matrix.name == 'mac'
         run: |
           echo "SEN_VERSION=${{ steps.yaml-output.outputs.version }}" >> $GITHUB_ENV
           echo "SEN_PATH=${{ steps.yaml-output.outputs.path }}" >> $GITHUB_ENV
 
-      - name: use-yaml-file-non-windows
-        if: matrix.os == 'windows-latest'
+      - name: Windows Use YAML
+        if: matrix.name == 'win'
         run: |
           echo "SEN_VERSION=${{ steps.yaml-output.outputs.version }}" >> $env:$GITHUB_ENV
           echo "SEN_PATH=${{ steps.yaml-output.outputs.path }}" >> $env:$GITHUB_ENV
