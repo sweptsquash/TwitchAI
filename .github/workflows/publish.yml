@@ -11,7 +11,6 @@ on:
 jobs:
   build:
     strategy:
-      fail-fast: true
       matrix:
         include:
           - os: ubuntu-latest
@@ -91,7 +90,7 @@ jobs:
       - name: Get composer cache directory
         if: matrix.os == 'windows-latest'
         id: composer-cache-windows
-        run: echo "dir=$(composer config cache-files-dir)" >> $env:$GITHUB_OUTPUT
+        run: echo "dir=$(composer config cache-files-dir)" >> $env:GITHUB_OUTPUT
 
       - name: Cache composer dependencies
         if: matrix.os != 'windows-latest'
@@ -136,8 +135,8 @@ jobs:
       - name: Windows Use YAML
         if: matrix.os == 'windows-latest'
         run: |
-          echo "SEN_VERSION=${{ steps.yaml-output.outputs.version }}" >> $env:$GITHUB_ENV
-          echo "SEN_PATH=${{ steps.yaml-output.outputs.path }}" >> $env:$GITHUB_ENV
+          echo "SEN_VERSION=${{ steps.yaml-output.outputs.version }}" >> $env:GITHUB_ENV
+          echo "SEN_PATH=${{ steps.yaml-output.outputs.path }}" >> $env:GITHUB_ENV
 
       - name: Upload binaries to release
         uses: svenstaro/upload-release-action@v2
